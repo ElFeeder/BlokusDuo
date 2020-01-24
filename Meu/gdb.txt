@@ -1,0 +1,235 @@
++set logging on
+Already logging to gdb.txt.
++b main
+Breakpoint 1 at [34m0x1159[m: file [32mMain.c[m, line 4.
++run
+Starting program: /home/galego/Documents/BlokusDuo/Meu/BlokusDuo 
+
+Breakpoint 1, [33mmain[m () at [32mMain.c[m:4
++s
+[33minitBoard[m () at [32mBoard.c[m:6
+warning: Source file is more recent than executable.
++n
++inf arg
+No arguments.
++inf loc
+[36mx[m = 1431654512
+[36my[m = 21845
++inf l
+Ambiguous info command "l": line, locals.
++inf lo
+[36mx[m = 1431654512
+[36my[m = 21845
++s
++n
++s
++s
+[33m__printf[m ([36mformat[m=0x55555555603f " %c") at [32mprintf.c[m:28
++s
++s
++s
+[33m__vfprintf_internal[m ([36ms[m=0x7ffff7fac760 <_IO_2_1_stdout_>, [36mformat[m=0x55555555603f " %c", [36map=ap@entry[m=0x7fffffffddd0, [m
+    [m[36mmode_flags=mode_flags@entry[m=0) at [32mvfprintf-internal.c[m:1277
++s
++s
++s
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
+[33m__printf[m ([36mformat[m=<optimised out>) at [32mprintf.c[m:36
++n
+[33minitBoard[m () at [32mBoard.c[m:7
++info lo
+[36mx[m = 1
+[36my[m = 21845
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 9
+[36my[m = 21845
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 16
+[36my[m = 21845
++n
++n
++info lo
+[36mx[m = 16
+[36my[m = 0
++n
++info lo
+[36mx[m = 0
+[36my[m = 0
++n
++n
++n
++n
++info lo
+[36mx[m = 1
+[36my[m = 0
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 16
+[36my[m = 0
++n
++n
++n
++info lo
+[36mx[m = 0
+[36my[m = 1
++n
++n
++n
++info lo
+[36mx[m = 1
+[36my[m = 1
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 4
+[36my[m = 1
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 16
+[36my[m = 1
++n
++n
++n
++info lo
+[36mx[m = 16
+[36my[m = 2
++n
++info lo
+[36mx[m = 0
+[36my[m = 2
++n
++n
++n
++n
++n
++n
++n
++n
++n
++n
++info lo
+[36mx[m = 4
+[36my[m = 2
+Quit
++quit
