@@ -11,8 +11,8 @@ Board.o:	Board.c	BlokusDuo.h
 Play.o:	Play.c	BlokusDuo.h
 	gcc -Wall -pedantic -ansi -g -c Play.c
 
-BlokusDuo:	Main.o Board.o
-	gcc Main.o Board.o -o BlokusDuo
+BlokusDuo:	Main.o Board.o Play.o
+	gcc Main.o Board.o Play.o -o BlokusDuo
 
 Clean:
-	rm Main.o Board.o
+	rm Main.o Board.o Play.o
