@@ -2,10 +2,10 @@
 
 all:	BlokusDuo	Clean
 
-Board.o:	Board.c	BlokusDuo.h	Pieces.h
+Board.o:	Board.c	BlokusDuo.h	PieceSizes.h
 	gcc -Wall -pedantic -ansi -g -c Board.c
 
-Play.o:	Play.c	BlokusDuo.h Pieces.h
+Play.o:	Play.c	BlokusDuo.h PiecesRotation.h
 	gcc -Wall -pedantic -ansi -g -c Play.c
 
 Main.o:	Main.c	BlokusDuo.h

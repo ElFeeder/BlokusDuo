@@ -1,5 +1,5 @@
 #include "BlokusDuo.h"
-#include "Pieces.h"
+#include "PieceSizes.h"
 
 void initBoard(int board[16][16], int available[2][21])  {
   int x = 0, y = 0;

@@ -1,5 +1,5 @@
 #include "BlokusDuo.h"
-#include "Pieces.h"
+#include "PiecesRotation.h"
 
 MOVE askMove(int currentPlayer, int turn)  {
   MOVE move;

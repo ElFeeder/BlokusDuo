@@ -7,7 +7,6 @@ int main(void)  {
   int check;
   int bonus[2] = { 0, 0 };
 
-  
   initBoard(board, available);
 
   do  {
@@ -23,7 +22,7 @@ int main(void)  {
     return 0;
   
   showBoard(board);
-  
+
   if(currentPlayer == 1)
     currentPlayer = 2;
   else

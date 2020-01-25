@@ -1,16 +1,5 @@
-#ifndef PIECES_H
-#define PIECES_H
-
-/*  There are 21 pieces in BlokusDuo. We'll use the letters
-    a to u to indicate each of them.  */
-    
-int pieceSizes[21] = {
-  1, /* a */
-  2, /* b */
-  3, 3, /*  c, d  */
-  4, 4, 4, 4, 4, /* e, f, g, h, i */
-  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 /* j to u  */
-};
+#ifndef PIECESROTATION_H
+#define PIECESROTATION_H
 
 int pieces[21][5][5] = {
   /*  a */ 
@@ -140,6 +129,7 @@ int pieces[21][5][5] = {
     { 0, 0, 1, 0, 0 },
     { 0, 0, 0, 0, 0 } }
   };
+
 
 /*  Here we'll store the 8 possible ways to put a piece on
     the board. To better identify them, we use the following
