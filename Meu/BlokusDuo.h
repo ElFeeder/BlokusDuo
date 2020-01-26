@@ -2,11 +2,24 @@
 #define BLOKUSDUO_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 #define BORDERFILL '+'
 
 #define TRUE 1
 #define FALSE 0
+
+#define AI 1
+
+#define PIECE_ALREADY_USED -1
+#define SPOT_NOT_EMPTY -2
+#define SHARES_EDGE -3
+#define NOT_SHARE_VERTEX -4
+#define MUST_COVER_55 -5
+#define MUST_COVER_AA -6
+#define FIRST_MOVE -7
 
 typedef struct move {
   int x;
@@ -17,6 +30,8 @@ typedef struct move {
 
 /*  Main.c  */
 int switchPlayer(int currentPlayer);
+int aiOrHuman(int playerNumber);
+void readError(int check);
 
 
 /*  Board.c */
@@ -27,12 +42,13 @@ int remainingPieces(int currentPlayer, int available[2][21]);
 
 
 /*  Play.c  */
-MOVE askMove(int currentPlayer, int turn);
+MOVE askMove(int currentPlayer, int turn, int ai);
 MOVE decodeCode(char* code);
 
 int checkCode(char* code);
 int checkMove(int currentPlayer, MOVE move, int board[16][16], int available[2][21], int turn);
 int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]);
+int checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21]);
 
 void placeMove(MOVE move, int board[16][16], int currentPlayer, int available[2][21]);
 
