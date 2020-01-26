@@ -8,6 +8,7 @@ int main(void)  {
   int bonus[2] = { 0, 0 };
 
   initBoard(board, available);
+  showBoard(board);
 
   do  {
     do  {
@@ -23,13 +24,19 @@ int main(void)  {
   
   showBoard(board);
 
-  if(currentPlayer == 1)
-    currentPlayer = 2;
-  else
-    currentPlayer = 1;
+  currentPlayer = switchPlayer(currentPlayer);
 
   turn++;
   }while(1);
 
   return 0;
+}
+
+int switchPlayer(int currentPlayer) {
+  if(currentPlayer == 1)
+    currentPlayer = 2;
+  else
+    currentPlayer = 1;
+
+  return currentPlayer;
 }

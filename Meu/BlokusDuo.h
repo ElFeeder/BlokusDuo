@@ -15,11 +15,16 @@ typedef struct move {
   int rotation;
 } MOVE;
 
+/*  Main.c  */
+int switchPlayer(int currentPlayer);
+
+
 /*  Board.c */
 void initBoard(int board[16][16], int available[2][21]);
 void showBoard(int board[16][16]);
 
 int remainingPieces(int currentPlayer, int available[2][21]);
+
 
 /*  Play.c  */
 MOVE askMove(int currentPlayer, int turn);
