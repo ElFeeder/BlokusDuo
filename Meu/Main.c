@@ -1,11 +1,10 @@
 #include "BlokusDuo.h"
 
 int main(void)  {
-  int currentPlayer = 1, turn = 0;
-  int board[16][16], available[2][21];
+  int currentPlayer = 1, turn = 0, board[16][16], available[2][21], check = 1, bonus[2] = {0, 0}, final = 0;
+  int player1, player2;
   MOVE move;
-  int check, player1, player2;
-  int bonus[2] = { 0, 0 };
+  char previousCode[5] = {'z', 'z', 'z', 'z'};
 
   player1 = aiOrHuman(1);
   player2 = aiOrHuman(2);
@@ -14,21 +13,15 @@ int main(void)  {
   showBoard(board);
   
   do  {
-    check = checkPossible(currentPlayer, turn, board, available);
-    if(check == 1)  { /*  If there's a possible play  */
+    move = checkPossible(currentPlayer, turn, board, available, (currentPlayer == 1 ? (player1 == AI ? 0 : 1) : (player2 == AI ? 0 : 1)), &final, bonus);
+    if(move.x == -1)  { /*  If there's a possible play  */
       do  {
-        move = askMove(currentPlayer, turn, (currentPlayer == 1 ? (player1 == AI ? 1 : 0) : (player2 == AI ? 1 : 0)));
+        move = askMove(currentPlayer, turn, (currentPlayer == 1 ? (player1 == AI ? 1 : 0) : (player2 == AI ? 1 : 0)), board, available, previousCode, bonus);
         check = checkMove(currentPlayer, move, board, available, turn);
 
         if(check != 1)
           readError(check);
       }while(check != 1);
-    }
-    else  { /*  Fill struct move with 0000 (automatic pass turn)  */
-      move.x = 0;
-      move.y = 0;
-      move.piece = 0;
-      move.rotation = 0;
     }
 
   placeMove(move, board, currentPlayer, available);
@@ -46,12 +39,7 @@ int main(void)  {
 }
 
 int switchPlayer(int currentPlayer) {
-  if(currentPlayer == 1)
-    currentPlayer = 2;
-  else
-    currentPlayer = 1;
-
-  return currentPlayer;
+  return (currentPlayer == 1 ? 2 : 1);
 }
 
 int aiOrHuman(int playerNumber) {
@@ -60,10 +48,7 @@ int aiOrHuman(int playerNumber) {
   printf("Would you like AI for Player%d? If yes, insert 1. ", playerNumber);
   scanf("%d", &check);
 
-  if(check == 1)
-    return AI; /*  AI  */
-  else
-    return 0; /*  Human */
+  return (check == 1 ? AI : 0);
 }
 
 void readError(int check) {
@@ -93,4 +78,21 @@ void readError(int check) {
       printf("Couldn't read error code.\nThe program will now shutdown.\n");
       exit(0);
   }
+}
+
+void endGame(int board[16][16], int currentPlayer, int available[2][21], int bonus[2])  {
+  int pieces1, pieces2;
+
+  showBoard(board);
+  
+  pieces1 = remainingPieces(1, available);
+  pieces2 = remainingPieces(2, available);
+
+  printf(" Tiles: %d / %d, Score: %d / %d.\n", pieces1, pieces2, bonus[0] - pieces1, bonus[1] - pieces2);
+    if(pieces1 != pieces2)
+      printf("Player %d won the game!\n", ((pieces1 < pieces2) ? 1 : 2 ));
+    else
+      printf("Draw game.\n");
+  
+  exit(0);
 }
