@@ -44,7 +44,7 @@ int remainingPieces(int currentPlayer, int available[2][21]);
 
 
 /*  Play.c  */
-MOVE askMove(int currentPlayer, int turn, int ai, int board[16][16], int available[2][21], char *previousCode, int bonus[2]);
+MOVE askMove(int currentPlayer, int turn, int board[16][16], int available[2][21], char *previousCode, int bonus[2]);
 MOVE decodeCode(char* code);
 
 int checkCode(char* code);

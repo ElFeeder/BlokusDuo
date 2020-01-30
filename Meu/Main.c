@@ -1,7 +1,8 @@
 #include "BlokusDuo.h"
 
 int main(void)  {
-  int currentPlayer = 1, turn = 0, board[16][16], available[2][21], check = 1, bonus[2] = {0, 0}, final = 0;
+  int currentPlayer = 1, turn = 0, board[16][16], available[2][21];
+  int check = 1, bonus[2] = {0, 0}, final = 0;
   int player1, player2;
   MOVE move;
   char previousCode[5] = {'z', 'z', 'z', 'z'};
@@ -13,16 +14,21 @@ int main(void)  {
   showBoard(board);
   
   do  {
-    move = checkPossible(currentPlayer, turn, board, available, (currentPlayer == 1 ? (player1 == AI ? 0 : 1) : (player2 == AI ? 0 : 1)), &final, bonus);
-    if(move.x == -1)  { /*  If there's a possible play  */
+    move = checkPossible(currentPlayer, turn, board, available, (currentPlayer == 1 ?
+                        (player1 == AI ? 0 : 1) : (player2 == AI ? 0 : 1)), &final, bonus);
+    if(move.x == -1)  { /*  If there's a possible play and the player is human  */
       do  {
-        move = askMove(currentPlayer, turn, (currentPlayer == 1 ? (player1 == AI ? 1 : 0) : (player2 == AI ? 1 : 0)), board, available, previousCode, bonus);
+        move = askMove(currentPlayer, turn, board, available, previousCode, bonus);
         check = checkMove(currentPlayer, move, board, available, turn);
 
         if(check != 1)
           readError(check);
       }while(check != 1);
     }
+    else
+      if(move.x != 0 || move.y != 0 || move.piece != 0 || move.rotation != 0)
+        printf("AI Play (Player%d)\nX = %d\tY = %d\tPeça = %d\tRotação = %d\n",
+            currentPlayer, move.x, move.y, move.piece, move.rotation);
 
   placeMove(move, board, currentPlayer, available);
   

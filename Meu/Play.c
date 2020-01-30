@@ -1,31 +1,23 @@
 #include "BlokusDuo.h"
 #include "PiecesRotation.h"
 
-MOVE askMove(int currentPlayer, int turn, int ai, int board[16][16], int available[2][21], char *previousCode, int bonus[2])  {
+MOVE askMove(int currentPlayer, int turn, int board[16][16], int available[2][21], char *previousCode, int bonus[2])  {
   MOVE move;
   char code[5];
   int check;
-  int fill[2] = {0, 0};
   
-  if(ai == 0)  {  /*  If player is human  */
-    do  {
-      printf("Turn %d\n", turn);
-      printf("Player %d: ", currentPlayer == 1 ? 1 : 2);
+  do  {
+    printf("Turn %d\n", turn);
+    printf("Player %d: ", currentPlayer == 1 ? 1 : 2);
 
-      scanf("%s", code);
+    scanf("%s", code);
+    printf("\n");
 
-      check = checkCode(code);
+    check = checkCode(code);
       
-      if(check == 0)
-        printf("Invalid code.\n");
-    } while(check != 1);
-  }
-  else  { /*  If player is AI */
-    move = checkPossible(currentPlayer, turn, board, available, 0, 0, fill);
-
-    printf("X = %d\tY = %d\tPeça = %d\tRotação = %d\n",
-            move.x, move.y, move.piece, move.rotation);
-  }
+    if(check == 0)
+      printf("Invalid code.\n");
+  }while(check != 1);
   
   /*  If both the previous code and the code are pass, the game must end. */
   if(strcmp(previousCode, "0000") == 0 && strcmp(code, "0000") == 0)  {
@@ -225,14 +217,14 @@ MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available
   we want to fill the opponent side as quickly as possible. (The
   same goes for player 2, starting from the upper left corner). */
   
-    for (move.x = (currentPlayer == 1 ? 14 : 1); 
-        (currentPlayer == 1 ? (move.x > 0) : (move.x < 15));
-        (currentPlayer == 1 ? (move.x--) : (move.x++))) {
-      for (move.y = (currentPlayer == 1 ? 14 : 1); 
-          (currentPlayer == 1 ? (move.y > 0) : (move.y < 15));
-          (currentPlayer == 1 ? (move.y--) : (move.y++))) {
-        for (move.piece = 21; move.piece >= 0; move.piece--)  {
-          for(move.rotation = 0; move.rotation < 8; move.rotation++)  {
+    for (move.piece = 20; move.piece >= 0; move.piece--)  {
+      for(move.rotation = 0; move.rotation < 8; move.rotation++)  {
+        for (move.x = (currentPlayer == 1 ? 14 : 1); 
+            (currentPlayer == 1 ? (move.x > 0) : (move.x < 15));
+            (currentPlayer == 1 ? (move.x--) : (move.x++))) {
+          for (move.y = (currentPlayer == 1 ? 14 : 1); 
+              (currentPlayer == 1 ? (move.y > 0) : (move.y < 15));
+              (currentPlayer == 1 ? (move.y--) : (move.y++))) {
             if(checkMove(currentPlayer, move, board, available, turn) == 1) {
               if(check == 1)  {  /*  If we're just checking to see if there's a possible play  */
                 move.x = -1;
