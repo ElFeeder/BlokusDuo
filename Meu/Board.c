@@ -48,5 +48,5 @@ void showBoard(int board[16][16])  {
         printf(" %c", (board[y][x] == 0 ? ' ' : board[y][x] < 3 ? board[y][x] + '0' : BORDERFILL));
       printf("\n");
     }
-  printf("---------------------------------------------------\n");
+  printf("---------------------------------------------------\n\n\n");
 }
