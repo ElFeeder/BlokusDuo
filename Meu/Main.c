@@ -13,7 +13,7 @@ int main(void)  {
   initBoard(board, available);
   showBoard(board);
   
-  do  {
+  while(1)  {
     move = checkPossible(currentPlayer, turn, board, available, (currentPlayer == 1 ?
                         (player1 == AI ? 0 : 1) : (player2 == AI ? 0 : 1)), &final, bonus);
     if(move.x == -1)  { /*  If there's a possible play and the player is human  */
@@ -39,7 +39,7 @@ int main(void)  {
   currentPlayer = switchPlayer(currentPlayer);
 
   turn++;
-  }while(1);
+  }
 
   return 0;
 }
