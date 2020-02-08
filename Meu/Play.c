@@ -210,7 +210,7 @@ int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21],
 
 MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int check, int *final, int bonus[2])  {
   MOVE move;
-
+  
   /*  We're gonna check for plays across the board. With
   the AI in mind, if the latter is player 1, we're starting
   from the lower right corner and moving our way up. That because
