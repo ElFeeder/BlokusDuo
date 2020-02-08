@@ -195,7 +195,7 @@ void placeMove(MOVE move, int board[16][16], int currentPlayer, int available[2]
   available[currentPlayer - 1][move.piece] = 0;
 }
 
-int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]) {
+void checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]) {
   if(remainingPieces(currentPlayer, available) == 0)  {
     bonus[currentPlayer - 1] = 15;
     if(move.piece == 0) /* If we finish with the individual piece */
@@ -203,9 +203,7 @@ int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21],
 
     endGame(board, currentPlayer, available, bonus);
   }
-
   /*  If we reached this point, the game hasn't ended */
-  return 0;
 }
 
 MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int check, int *final, int bonus[2])  {
