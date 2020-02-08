@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 #define BORDERFILL '+'
@@ -30,10 +31,10 @@ typedef struct move {
 
 /*  Main.c  */
 int switchPlayer(int currentPlayer);
-int aiOrHuman(int playerNumber);
+int endGame(int board[16][16], int currentPlayer, int available[2][21], int bonus[2]);
 
 void readError(int check);
-void endGame(int board[16][16], int currentPlayer, int available[2][21], int bonus[2]);
+void scanAndWrite(int board[16][16], FILE *results);
 
 
 /*  Board.c */
@@ -50,7 +51,7 @@ MOVE decodeCode(char* code);
 int checkCode(char* code);
 int checkMove(int currentPlayer, MOVE move, int board[16][16], int available[2][21], int turn);
 int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]);
-MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int check, int *final, int bonus[2]);
+MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int *final, int bonus[2]);
 
 void placeMove(MOVE move, int board[16][16], int currentPlayer, int available[2][21]);
 

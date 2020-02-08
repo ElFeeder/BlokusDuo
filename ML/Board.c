@@ -6,17 +6,17 @@ void initBoard(int board[16][16], int available[2][21])  {
 
   /*  At the beggining, every piece is available for
       each player.  */
-  for(y=0; y<2; y++)
-    for(x=0; x<21; x++)
+  for(y = 0; y < 2; y++)
+    for(x = 0; x < 21; x++)
       available[y][x] = 1;
   
   /*  Fill board with 0 */
-  for(y=0; y<16; y++)
-    for(x=0; x<16; x++)
+  for(y = 0; y < 16; y++)
+    for(x = 0; x < 16; x++)
       board[y][x] = 0;
       
   /*  Fill the border */
-  for(x=0; x<16; x++){
+  for(x = 0; x < 16; x++){
     board[ 0][ x] = 3;
     board[15][ x] = 3;
     board[ x][ 0] = 3;

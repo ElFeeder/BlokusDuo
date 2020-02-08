@@ -1,99 +1,6 @@
 #include "BlokusDuo.h"
 #include "PiecesRotation.h"
 
-MOVE askMove(int currentPlayer, int turn, int board[16][16], int available[2][21], char *previousCode, int bonus[2])  {
-  MOVE move;
-  char code[5];
-  int check;
-  
-  do  {
-    printf("Turn %d\n", turn);
-    printf("Player %d: ", currentPlayer == 1 ? 1 : 2);
-
-    scanf("%s", code);
-    printf("\n");
-
-    check = checkCode(code);
-      
-    if(check == 0)
-      printf("Invalid code.\n");
-  }while(check != 1);
-  
-  /*  If both the previous code and the code are pass, the game must end. */
-  if(strcmp(previousCode, "0000") == 0 && strcmp(code, "0000") == 0)  {
-    printf("Both players passed. The game will end.\n");
-    endGame(board, currentPlayer, available, bonus);
-  }
-    
-  move = decodeCode(code);
-  
-  strcpy(previousCode, code);
-  
-  return move;
-}
-
-MOVE decodeCode(char* code) {
-  MOVE move;
-  char ch;
-
-  /*  We'll analise each character from the code.
-      The first and the second are the board coordinates in which
-      the center of the selected piece (third character) must be
-      placed. The fourth character indicates the rotation of the
-      piece. If the code is 0000, that indicates that the player
-      wants to pass the turn. For more information, see
-      PiecesRotation.h */
-  
-  if(strcmp("0000", code) == 0) {
-    move.x = 0;
-    move.y = 0;
-    move.piece = 0;
-    move.rotation = 0;
-    
-    return move;
-  }
-
-  ch = code[0];
-  if('0' <= ch && ch <= '9')
-    move.x = ch - '0';
-  if('a' <= ch && ch <= 'e')
-    move.x = ch - 'a' + 10;
-
-  ch = code[1];
-  if('0' <= ch && ch <= '9')
-    move.y = ch - '0';
-  if('a' <= ch && ch <= 'e')
-    move.y = ch - 'a' + 10;
-
-  ch = code[2];
-  move.piece = ch - 'a';
-
-  ch = code[3];
-  move.rotation = ch - '0';
-
-  return move;
-}
-
-int checkCode(char* code)  {
-  char ch;
-
-  /*  We'll evaluate each character to see if it
-      corresponds to a valid play.  */
-
-  ch = code[0];
-  if(! (('0'<= ch && ch <= '9') || ('a' <= ch && ch <= 'e')) ) return FALSE;
-
-  ch = code[1];
-  if(! (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'e')) ) return FALSE;
-
-  ch = code[2];
-  if(! (('a' <= ch && ch <= 'u') || ch == '0')) return FALSE;
-
-  ch = code[3];
-  if(! (('0' <= ch && ch <= '7') || ch == '0')) return FALSE;
-
-  return TRUE;
-}
 
 int checkMove(int currentPlayer, MOVE move, int board[16][16], int available[2][21], int turn) {
   int xOffset = move.x - 2, yOffset = move.y - 2, valid = FALSE;
@@ -196,20 +103,27 @@ void placeMove(MOVE move, int board[16][16], int currentPlayer, int available[2]
 }
 
 int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]) {
+  int winner;
+
   if(remainingPieces(currentPlayer, available) == 0)  {
     bonus[currentPlayer - 1] = 15;
     if(move.piece == 0) /* If we finish with the individual piece */
       bonus[currentPlayer - 1] = 20;
 
-    endGame(board, currentPlayer, available, bonus);
+    winner = endGame(board, currentPlayer, available, bonus);
+    return winner;
   }
 
   /*  If we reached this point, the game hasn't ended */
-  return 0;
+  return -1;
 }
 
-MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int check, int *final, int bonus[2])  {
+MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int *final, int bonus[2])  {
   MOVE move;
+  int r;
+
+  /* rand is only for the ML study  */
+  srand(time(NULL));
   
   /*  We're gonna check for plays across the board. With
   the AI in mind, if the latter is player 1, we're starting
@@ -217,31 +131,23 @@ MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available
   we want to fill the opponent side as quickly as possible. (The
   same goes for player 2, starting from the upper left corner). */
   
-    for (move.piece = 20; move.piece >= 0; move.piece--)  {
-      for(move.rotation = 0; move.rotation < 8; move.rotation++)  {
-        for (move.x = (currentPlayer == 1 ? 14 : 1); 
-            (currentPlayer == 1 ? (move.x > 0) : (move.x < 15));
-            (currentPlayer == 1 ? (move.x--) : (move.x++))) {
-          for (move.y = (currentPlayer == 1 ? 14 : 1); 
-              (currentPlayer == 1 ? (move.y > 0) : (move.y < 15));
-              (currentPlayer == 1 ? (move.y--) : (move.y++))) {
-            if(checkMove(currentPlayer, move, board, available, turn) == 1) {
-              if(check == 1)  {  /*  If we're just checking to see if there's a possible play  */
-                move.x = -1;
-                *final = 0;
-                return move;
-              }
-              else  { /*  If we're looking for an AI play */
-                *final = 0;
-                return move;
-              }
-            } 
+  for (move.piece = 20; move.piece >= 0; move.piece--)  {
+    for(move.rotation = 0; move.rotation < 8; move.rotation++)  {
+      for (move.x = (currentPlayer == 1 ? 14 : 1); 
+          (currentPlayer == 1 ? (move.x > 0) : (move.x < 15));
+          (currentPlayer == 1 ? (move.x--) : (move.x++))) {
+        for (move.y = (currentPlayer == 1 ? 14 : 1); 
+            (currentPlayer == 1 ? (move.y > 0) : (move.y < 15));
+            (currentPlayer == 1 ? (move.y--) : (move.y++))) {
+          r = rand() % 300;
+          if(checkMove(currentPlayer, move, board, available, turn) == 1 && r % 3 == 0) {
+              *final = 0;
+              return move;
           }
-        }
+        } 
       }
     }
-  /*  If we reach this point, there is no possible play */
-  printf("No possible play for Player%d. Skip move.\n", currentPlayer);
+  }
 
   /*  If final = 1, previous player didn't have a play aswell. The game must end. */
   if(*final == 1)
