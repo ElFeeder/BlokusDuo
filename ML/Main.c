@@ -7,10 +7,9 @@ int main(void)  {
   MOVE move;
   FILE *results;
 
-  /* rand is only for the ML study  */
   srand(time(NULL));
 
-  results = fopen("ResultsP1S1", "w");
+  results = fopen("ResultsP1S1", "w");  /*  Change this (Player/StartingPlayer) */
   if(results == NULL) {
     printf("Error opening file.\n");
     exit(0);
@@ -23,7 +22,7 @@ int main(void)  {
   fclose(results);
   
   do  {
-    currentPlayer = 1;  /*  Right now, we want to start as player1  */
+    currentPlayer = 1;  /*  Right now, we want to start as player1  (Starting Player) */
     final = 0;
     turn = 0;
     bonus[0] = 0;
@@ -33,7 +32,7 @@ int main(void)  {
     while(1)  {
       move = checkPossible(currentPlayer, turn, board, available, &final, bonus);
       if(move.x < 0)  {
-        if(move.x == -2)  /*  We're checking for wins on player1 now  */
+        if(move.x == -2)  /*  We're checking for wins on player1 now (Player - 3) */
           scanAndWrite(board, results);
         break;
       }
@@ -43,7 +42,7 @@ int main(void)  {
       winner = checkIfEnd(currentPlayer, bonus, move, available, board);
       
       if(winner != -1) {
-        if(winner == 1) /*  We're checking for wins on player1 now  */
+        if(winner == 1) /*  We're checking for wins on player1 now  (Player)  */
           scanAndWrite(board, results);
         break;
       }
@@ -54,7 +53,7 @@ int main(void)  {
     }
     
     iter++;
-  }while(iter < 10);
+  }while(iter < 50000); /*  Change for how many games you want  */
 
   return 0;
 }
@@ -89,23 +88,23 @@ int endGame(int board[16][16], int currentPlayer, int available[2][21], int bonu
 void scanAndWrite(int board[16][16], FILE *results) {
   int x, y;
   
-  results = fopen("ResultsP1S1", "a");
+  results = fopen("ResultsP2S2", "a");
   if(results == NULL) {
     printf("Error opening file.\n");
     exit(0);
   }
 
-  /*  Scan board and write 1 for each spot occupied by player 1 */
+  /*  Scan board and write 1 for each spot occupied by Playerx */
   for(y = 1; y < 15; y++) {
     for(x = 1; x < 15; x++) {
       if(x == 14 && y == 14)  { /*  If we're in the last spot */
-        if(board[y][x] == 1)
+        if(board[y][x] == 2)  /*  Change this to Player */
           fprintf(results, "1");
         else
           fprintf(results, "0");
       }
       else  {
-        if(board[y][x] == 1)
+        if(board[y][x] == 2)  /*  Change this to Player */
           fprintf(results, "1,");
         else
           fprintf(results, "0,");
