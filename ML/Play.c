@@ -121,9 +121,6 @@ int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21],
 MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int *final, int bonus[2])  {
   MOVE move;
   int r;
-
-  /* rand is only for the ML study  */
-  srand(time(NULL));
   
   /*  We're gonna check for plays across the board. With
   the AI in mind, if the latter is player 1, we're starting
@@ -150,8 +147,11 @@ MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available
   }
 
   /*  If final = 1, previous player didn't have a play aswell. The game must end. */
-  if(*final == 1)
-    endGame(board, currentPlayer, available, bonus);
+  if(*final == 1) {
+    move.x = endGame(board, currentPlayer, available, bonus);
+    move.x = move.x - 3;
+    return move;
+  }
   else
     *final = 1;
   

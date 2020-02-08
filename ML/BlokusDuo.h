@@ -33,24 +33,19 @@ typedef struct move {
 int switchPlayer(int currentPlayer);
 int endGame(int board[16][16], int currentPlayer, int available[2][21], int bonus[2]);
 
-void readError(int check);
 void scanAndWrite(int board[16][16], FILE *results);
 
 
 /*  Board.c */
 void initBoard(int board[16][16], int available[2][21]);
-void showBoard(int board[16][16]);
 
 int remainingPieces(int currentPlayer, int available[2][21]);
 
 
 /*  Play.c  */
-MOVE askMove(int currentPlayer, int turn, int board[16][16], int available[2][21], char *previousCode, int bonus[2]);
-MOVE decodeCode(char* code);
-
-int checkCode(char* code);
 int checkMove(int currentPlayer, MOVE move, int board[16][16], int available[2][21], int turn);
 int checkIfEnd(int currentPlayer, int bonus[2], MOVE move, int available[2][21], int board[16][16]);
+
 MOVE checkPossible(int currentPlayer, int turn, int board[16][16], int available[2][21], int *final, int bonus[2]);
 
 void placeMove(MOVE move, int board[16][16], int currentPlayer, int available[2][21]);

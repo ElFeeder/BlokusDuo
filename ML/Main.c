@@ -1,11 +1,14 @@
 #include "BlokusDuo.h"
 
 int main(void)  {
-  int currentPlayer, turn = 0, board[16][16], available[2][21];
-  int bonus[2] = {0, 0}, final = 0, iter = 0;
-  int winner;
+  int currentPlayer, board[16][16], available[2][21];
+  int bonus[2] = {0, 0}, iter = 0;
+  int winner, final, turn;
   MOVE move;
   FILE *results;
+
+  /* rand is only for the ML study  */
+  srand(time(NULL));
 
   results = fopen("ResultsP1S1", "w");
   if(results == NULL) {
@@ -21,30 +24,37 @@ int main(void)  {
   
   do  {
     currentPlayer = 1;  /*  Right now, we want to start as player1  */
+    final = 0;
+    turn = 0;
+    bonus[0] = 0;
+    bonus[1] = 0;
     initBoard(board, available);
   
-    do  {
+    while(1)  {
       move = checkPossible(currentPlayer, turn, board, available, &final, bonus);
-      printf("%d %d %d %d\n", move.x, move.y, move.piece, move.rotation);
-
+      if(move.x < 0)  {
+        if(move.x == -2)  /*  We're checking for wins on player1 now  */
+          scanAndWrite(board, results);
+        break;
+      }
+      
       placeMove(move, board, currentPlayer, available);
       
       winner = checkIfEnd(currentPlayer, bonus, move, available, board);
       
-      if(winner == 1) { /*  We're checking for wins on player1 now  */
-        scanAndWrite(board, results);
+      if(winner != -1) {
+        if(winner == 1) /*  We're checking for wins on player1 now  */
+          scanAndWrite(board, results);
         break;
       }
-      else
-        break;
 
       currentPlayer = switchPlayer(currentPlayer);
 
       turn++;
-    }while(1);
+    }
     
     iter++;
-  }while(iter < 5);
+  }while(iter < 10);
 
   return 0;
 }
@@ -60,11 +70,11 @@ int endGame(int board[16][16], int currentPlayer, int available[2][21], int bonu
   pieces2 = remainingPieces(2, available);
 
   printf(" Unplaced Tiles: %d / %d, Score: %d / %d.\n", pieces1, pieces2, bonus[0] - pieces1, bonus[1] - pieces2);
-    if(pieces1 > pieces2)  {
+    if(pieces1 < pieces2)  {
       winner = 1;
       printf("Player 1 won the game!\n");
     }
-    else if(pieces1 < pieces2)  {
+    else if(pieces1 > pieces2)  {
       winner = 2;
       printf("Player 2 won the game!\n");
     }
@@ -86,8 +96,8 @@ void scanAndWrite(int board[16][16], FILE *results) {
   }
 
   /*  Scan board and write 1 for each spot occupied by player 1 */
-  for(y = 0; y < 15; y++) {
-    for(x = 0; x < 15; x++) {
+  for(y = 1; y < 15; y++) {
+    for(x = 1; x < 15; x++) {
       if(x == 14 && y == 14)  { /*  If we're in the last spot */
         if(board[y][x] == 1)
           fprintf(results, "1");
@@ -102,6 +112,6 @@ void scanAndWrite(int board[16][16], FILE *results) {
       }
     }
   }
-
+  fprintf(results, "\n");
   fclose(results);
 }
