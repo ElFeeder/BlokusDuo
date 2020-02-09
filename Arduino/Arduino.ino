@@ -453,8 +453,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
   int8_t xr, yr;
   int8_t xOffset = move.x - 2, yOffset = move.y - 2;
 
-  uint8_t x, y, check, valid;
-
+  uint8_t x, y, check, valid = 0;
 
   if (available_pieces[0][move.piece] == 0)
     return 0;
@@ -467,7 +466,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -481,7 +480,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -495,7 +494,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -509,7 +508,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -523,7 +522,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -537,7 +536,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -551,7 +550,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -565,7 +564,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
             check = iterCheckMove(xOffset, x, yOffset, y, board);
             if (check == 0)
               return 0;
-            else
+            else if (check == 1)
               valid = 1;
           }
         }
@@ -585,14 +584,14 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   xx = xOffset + x;
   yy = yOffset + y;
 
-  if (board[yy][xx] != 0 || yy < 0 || 13 < yy || xx < 0 || 13 < xx)     // Already occupied grid spot or out of bounds
+  if (board[yy][xx] != 0 || yy < 0 || 13 < yy || xx < 0 || 13 < xx)                     // Already occupied grid spot or out of bounds
     return 0;
-  if (board[yy][xx - 1] == 1 || board[yy][xx + 1] == 1 || board[yy - 1][xx] == 1 || board[yy + 1][xx] == 1 )                  // New piece can't share edge
+  if (board[yy][xx - 1] == 1 || board[yy][xx + 1] == 1 || board[yy - 1][xx] == 1 || board[yy + 1][xx] == 1 )              // New piece can't share edge
     return 0;
-  if (board[yy - 1][xx - 1] == 1 || board[yy + 1][xx - 1] == 1 || board[yy - 1][xx + 1] == 1 || board[yy + 1][xx + 1] == 1)   // Must share vertex
+  if (board[yy - 1][xx - 1] == 1 || board[yy + 1][xx - 1] == 1 || board[yy - 1][xx + 1] == 1 || board[yy + 1][xx + 1] == 1)    // Must share vertex
     return 1;
 
-  return 0;
+  return 2;           // Can't conclude anything
 }
 
 
