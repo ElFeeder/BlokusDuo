@@ -6,13 +6,6 @@ int checkMove(int currentPlayer, MOVE move, int board[16][16], int available[2][
   int xOffset = move.x - 2, yOffset = move.y - 2, valid = FALSE;
   int x, y, b, xx, yy;
 
-  /*  Check if pass */
-  if(move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0) {
-    /*  Check if it's the first turn of this player */
-    if((turn == 0 && currentPlayer == 1) || (turn == 1 && currentPlayer == 2))
-      return FIRST_MOVE;
-    return 1;
-  }
 
   /*  Check piece availability  */
   if(available[currentPlayer - 1][move.piece] == 0)

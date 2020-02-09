@@ -53,7 +53,7 @@ int main(void)  {
     }
     
     iter++;
-  }while(iter < 50000); /*  Change for how many games you want  */
+  }while(iter < 5); /*  Change for how many games you want  */
 
   return 0;
 }
