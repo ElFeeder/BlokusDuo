@@ -264,7 +264,7 @@ void loop() {
         read_serial_string(enemy_move);
         move = checkCode(enemy_move);
         updateBoard(move, board, 2);
-        available_pieces[1][move.piece] = 0;
+        /*available_pieces[1][move.piece] = 0;*/
 
         move = basicAI(board, available_pieces);
         moveToString(move, my_move);
@@ -290,8 +290,8 @@ void read_serial_string(char input_string[5]) {
 
 
 void moveToString(MOVE move, char myMove[5])  {
-  move.x++;         // Compensate for border
-  move.y++;
+  /*move.x++;         // Compensate for border
+  move.y++;*/
 
   if (move.x < 10)
     myMove[0] = move.x + '0';
@@ -380,14 +380,19 @@ void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
   int8_t xOffset, yOffset, xr, yr;
 
 
-  xOffset = move.x - 3;             // Compensate for borders
-  yOffset = move.y - 3;
-
   // Check if pass
   if (move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0)
     return;
+    
+  xOffset = move.x - 2;             // Compensate for borders
+  yOffset = move.y - 2;
 
+  /*Serial.println("");
+  Serial.print(move.x);
+  Serial.print(" ");
+  Serial.println(move.y);*/
 
+  
   switch (move.rotation) {          // Ask Abreu about this madness
     case 0:
       for (y = 0, yr = 0; yr < 5; y++, yr++)
@@ -458,6 +463,15 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
   if (available_pieces[0][move.piece] == 0)
     return 0;
 
+  /*Serial.println("");
+  Serial.print(move.x);
+  Serial.print(" ");
+  Serial.print(move.y);
+  Serial.print(" ");
+  Serial.print(move.piece);
+  Serial.print(" ");
+  Serial.println(move.rotation);*/
+
   switch (move.rotation) {
     case 0:
       for (yr = 0, y = 0; yr < 5; yr++, y++) {
@@ -468,6 +482,10 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
               return 0;
             else if (check == 1)
               valid = 1;
+
+            /*Serial.print(check);
+            Serial.print(" ");
+            Serial.println(valid);*/
           }
         }
       }
@@ -584,6 +602,10 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   xx = xOffset + x;
   yy = yOffset + y;
 
+  /*Serial.print(yy);
+  Serial.print(" ");
+  Serial.println(xx);*/
+  
   if (board[yy][xx] != 0 || yy < 0 || 13 < yy || xx < 0 || 13 < xx)                     // Already occupied grid spot or out of bounds
     return 0;
   if (board[yy][xx - 1] == 1 || board[yy][xx + 1] == 1 || board[yy - 1][xx] == 1 || board[yy + 1][xx] == 1 )              // New piece can't share edge
