@@ -268,6 +268,7 @@ void loop() {
         Serial.print(my_move);
         updateBoard(move, board, 1);
         available_pieces[0][move.piece] = 0;
+        /*print_board(board);*/
         break;
 
       default:
@@ -461,6 +462,15 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
   if (available_pieces[0][move.piece] == 0)
     return 0;
 
+  /*Serial.println("");
+  Serial.print(move.x);
+  Serial.print(" ");
+  Serial.print(move.y);
+  Serial.print(" ");
+  Serial.print(move.piece);
+  Serial.print(" ");
+  Serial.println(move.rotation);*/
+  
   switch (move.rotation) {
     case 0:
       for (yr = 0, y = 0; yr < 5; yr++, y++) {
@@ -587,20 +597,36 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   xx = xOffset + x;
   yy = yOffset + y;
 
-  if (yy < 0 || 13 > yy || xx < 0 || 13 > xx)             // Out of bounds
+  if (yy < 0 || 13 < yy || xx < 0 || 13 < xx){             // Out of bounds
+    /*Serial.println("out of bounds");*/
     return 0;
-  /*if (yy - 1 < 0 || xx - 1 < 0 || xx + 1 > 13 || yy + 1 > 13)
-    flag = 1;*/
-
-  if (board[yy][xx] != 0)                     // Already occupied grid spot
+  }
+  /*if (yy - 1 < 0 || xx - 1 < 0 || xx + 1 > 13 || yy + 1 > 13){     // Can't conclude anything
+    Serial.println("2");
+    Serial.println(yy);
+    Serial.println(xx);
+    Serial.println(y);
+    Serial.println(x);
+    Serial.println(xOffset);
+    Serial.println(yOffset);
+    return 2;
+  }*/
+  if (board[yy][xx] != 0)  {                   // Already occupied grid spot
+    /*Serial.println("occupied");*/
     return 0;
-  if ((board[yy][xx - 1] == 1 && xx - 1 >= 0) || (board[yy][xx + 1] == 1 && xx + 1 <= 13) ||
-      (board[yy - 1][xx] == 1 && yy - 1 >= 0) || (board[yy + 1][xx] == 1 && yy + 1 <= 13))              // New piece can't share edge
+  }
+  if (board[yy][(xx - 1 < 0 ? 0 : xx - 1)] == 1 || board[yy][(xx + 1 > 13 ? 13 : xx + 1)] == 1 ||
+  board[(yy - 1 < 0 ? 0 : yy - 1)][xx] == 1 || (board[(yy + 1 > 13 ? 13 : yy + 1)][xx] == 1))    {          // New piece can't share edge
+    /*Serial.println("edge");*/
     return 0;
-  if ((board[yy - 1][xx - 1] == 1 && yy - 1 >= 0 && xx - 1 >= 0) || (board[yy + 1][xx - 1] == 1 && yy + 1 <= 13 && xx - 1 >= 0) ||
-      (board[yy - 1][xx + 1] == 1 && yy - 1 >= 0 && xx + 1 <= 13) || (board[yy + 1][xx + 1] == 1 && yy + 1 <= 13 && xx + 1 <= 13))    // Must share vertex
+  }
+  if (board[(yy - 1 < 0 ? 0 : yy - 1)][(xx - 1 < 0 ? 0 : xx - 1)] == 1 || board[(yy + 1 > 13 ? 13 : yy + 1)][(xx - 1 < 0 ? 0 : xx - 1)] == 1
+      || board[(yy - 1 < 0 ? 0 : yy - 1)][(xx + 1 > 13 ? 13 : xx + 1)] == 1 || board[(yy + 1 > 13 ? 13 : yy + 1)][(xx + 1 > 13 ? 13 : xx + 1)] == 1) {   // Must share vertex
+    /*Serial.println("vertex");*/
     return 1;
+  }
 
+  /*Serial.println("bruh");*/
   return 2;           // Can't conclude anything
 }
 
