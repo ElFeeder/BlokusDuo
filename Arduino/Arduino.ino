@@ -217,6 +217,7 @@ void loop() {
             Serial.print((char*)"66s0");         // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
+            /*print_board(board);*/
             break;
 
           case 'A':
@@ -271,6 +272,7 @@ void loop() {
         Serial.print(my_move);
         updateBoard(move, board, 1);
         available_pieces[0][move.piece] = 0;
+        /*print_board(board);*/
         break;
 
       default:
@@ -368,9 +370,6 @@ MOVE checkCode(char external_move[5]) {
 
   c = external_move[3];
   move.rotation = c - '0';
-
-  move.x--;
-  move.y--;
   
   return move;
 }
@@ -642,7 +641,7 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
   return move;
 }
 
-/*void print_board(uint8_t board [14][14]) {
+void print_board(uint8_t board [14][14]) {
   int x;
   int y;
 
@@ -658,8 +657,8 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
     }
     Serial.println(" ");
   }
-  }
-
+ }
+/*
   void print_pieces(int available_pieces [2][21]) {
   int x;
   int y;
