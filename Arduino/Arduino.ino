@@ -605,8 +605,8 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21], uint8_t dir
 
   for (move.piece = 20; move.piece >= 0; move.piece--)
     for (move.rotation = 0; move.rotation < 8; move.rotation++)
-      for (move.x = (dir == UPLEFT ? 13 : 0); (dir == UPLEFT ? move.x >= 0 : move.x <= 13); (dir == UPLEFT ? move.x-- : move.x++))
-        for (move.y = (dir == UPLEFT ? 13 : 0); (dir == UPLEFT ? move.x >= 0 : move.x <= 13); (dir == UPLEFT ? move.x-- : move.x++))
+      for (move.x = (dir == DOWNRIGHT ? 13 : 0); (dir == DOWNRIGHT ? move.x >= 0 : move.x <= 13); (dir == DOWNRIGHT ? move.x-- : move.x++))
+        for (move.y = (dir == DOWNRIGHT ? 13 : 0); (dir == DOWNRIGHT ? move.y >= 0 : move.y <= 13); (dir == DOWNRIGHT ? move.y-- : move.y++))
           if (checkMove(board, available_pieces, move) == 1)  {  // Check if it's a valid move
             move.x++;
             move.y++;
