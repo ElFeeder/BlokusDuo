@@ -1,6 +1,10 @@
+#define DOWNRIGHT 0
+#define UPLEFT 1
+
 uint8_t read_byte, readSecondByte;
 uint8_t board[14][14];
 uint8_t available_pieces[2][21];
+uint8_t dir;
 
 char enemy_move[5];
 char my_move[5];
@@ -185,7 +189,7 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
 
 
 // TEST FUNCTIONS -----------------------------------------------------------------
-MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]);
+MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21], uint8_t dir);
 
 
 
@@ -218,12 +222,14 @@ void loop() {
             Serial.print((char*)"66s0");         // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
+            dir = DOWNRIGHT;
             break;
 
           case 'A':
             Serial.print((char*)"99s0");
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
+            dir = UPLEFT;
             break;
 
           default:
@@ -242,6 +248,7 @@ void loop() {
             Serial.print((char*)"66s0");           // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
+            dir = DOWNRIGHT;
             break;
 
           case 'A':
@@ -252,6 +259,7 @@ void loop() {
             Serial.print((char*)"99s0");           // Always the first play
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
+            dir = UPLEFT;
             break;
 
           default:
@@ -264,7 +272,7 @@ void loop() {
         move = checkCode(enemy_move);
         updateBoard(move, board, 2);
 
-        move = basicAI(board, available_pieces);
+        move = basicAI(board, available_pieces, dir);
         moveToString(move, my_move);
         Serial.print(my_move);
         updateBoard(move, board, 1);
@@ -592,13 +600,13 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
 
 // TEST FUNCTIONS ------------------------------------------------------------------------------------------------------------------------------
 
-MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
+MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21], uint8_t dir) {
   MOVE move;
 
   for (move.piece = 20; move.piece >= 0; move.piece--)
     for (move.rotation = 0; move.rotation < 8; move.rotation++)
-      for (move.x = 13; move.x >= 0; move.x--)
-        for (move.y = 13; move.y >= 0; move.y--)
+      for (move.x = (dir == UPLEFT ? 13 : 0); (dir == UPLEFT ? move.x >= 0 : move.x <= 13); (dir == UPLEFT ? move.x-- : move.x++))
+        for (move.y = (dir == UPLEFT ? 13 : 0); (dir == UPLEFT ? move.x >= 0 : move.x <= 13); (dir == UPLEFT ? move.x-- : move.x++))
           if (checkMove(board, available_pieces, move) == 1)  {  // Check if it's a valid move
             move.x++;
             move.y++;
