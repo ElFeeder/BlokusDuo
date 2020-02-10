@@ -288,7 +288,7 @@ void read_serial_string(char input_string[5]) {
 
 void moveToString(MOVE move, char myMove[5])  {
 
-  if(move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0) {
+  if (move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0) {
     myMove[0] = '0';
     myMove[1] = '0';
     myMove[2] = '0';
@@ -296,7 +296,7 @@ void moveToString(MOVE move, char myMove[5])  {
 
     return;
   }
-  
+
   if (move.x < 10)
     myMove[0] = move.x + '0';
   else
@@ -374,7 +374,7 @@ MOVE checkCode(char external_move[5]) {
 
   c = external_move[3];
   move.rotation = c - '0';
-  
+
   return move;
 }
 
@@ -387,10 +387,10 @@ void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
   // Check if pass
   if (move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0)
     return;
-    
+
   xOffset = move.x - 3;             // Compensate for borders
   yOffset = move.y - 3;
-  
+
   switch (move.rotation) {          // Ask Abreu about this madness
     case 0:
       for (y = 0, yr = 0; yr < 5; y++, yr++)
@@ -460,7 +460,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
 
   if (available_pieces[0][move.piece] == 0)
     return 0;
-  
+
   switch (move.rotation) {
     case 0:
       for (yr = 0, y = 0; yr < 5; yr++, y++) {
@@ -586,12 +586,16 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
 
   xx = xOffset + x;
   yy = yOffset + y;
-  
-  if (board[yy][xx] != 0 || yy - 1 < 0 || 13 < yy + 1 || xx - 1 < 0 || 13 < xx + 1)                     // Already occupied grid spot or out of bounds
+
+  if (yy < 0 || 13 > yy || xx < 0 || 13 > xx)                       // Out of bounds
     return 0;
-  if (board[yy][xx - 1] == 1 || board[yy][xx + 1] == 1 || board[yy - 1][xx] == 1 || board[yy + 1][xx] == 1 )              // New piece can't share edge
+  if (board[yy][xx] != 0)                     // Already occupied grid spot
     return 0;
-  if (board[yy - 1][xx - 1] == 1 || board[yy + 1][xx - 1] == 1 || board[yy - 1][xx + 1] == 1 || board[yy + 1][xx + 1] == 1)    // Must share vertex
+  if ((board[yy][xx - 1] == 1 && xx - 1 >= 0) || (board[yy][xx + 1] == 1 && xx + 1 >= 0) ||
+      (board[yy - 1][xx] == 1 && y - 1 >= 0) || (board[yy + 1][xx] == 1 && yy - 1 >= 0))              // New piece can't share edge
+    return 0;
+  if ((board[yy - 1][xx - 1] == 1 && yy - 1 >= 0 && xx - 1 >= 0) || (board[yy + 1][xx - 1] == 1 && yy + 1 >= 0 && xx - 1 >= 0)
+      || (board[yy - 1][xx + 1] == 1 && yy - 1 >= 0 && xx + 1 >= 0) || (board[yy + 1][xx + 1] == 1 && yy + 1 >= 0 && xx + 1 >= 0))  // Must share vertex
     return 1;
 
   return 2;           // Can't conclude anything
@@ -638,7 +642,7 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
     }
     Serial.println(" ");
   }
-}*/
+  }*/
 /*
   void print_pieces(int available_pieces [2][21]) {
   int x;
