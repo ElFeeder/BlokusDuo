@@ -1,7 +1,6 @@
 uint8_t read_byte, readSecondByte;
 uint8_t board[14][14];
 uint8_t available_pieces[2][21];
-uint8_t dataPackage = 0;
 
 char enemy_move[5];
 char my_move[5];
@@ -201,7 +200,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > dataPackage)       // check if there is information in the port
+  if (Serial.available() > 0)       // check if there is information in the port
   {
     delay(1);                       // for reasons only known to god, without this delay, the code doesnt work, please dont remove
     read_byte = Serial.read();      // read first byte from recieved string
@@ -218,15 +217,12 @@ void loop() {
             Serial.print((char*)"66s0");         // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
-            /*print_board(board);*/
-            dataPackage = 4;
             break;
 
           case 'A':
             Serial.print((char*)"99s0");
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
-            dataPackage = 4;
             break;
 
           default:
@@ -246,7 +242,6 @@ void loop() {
             Serial.print((char*)"66s0");           // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
-            dataPackage = 4;
             break;
 
           case 'A':
@@ -258,7 +253,6 @@ void loop() {
             Serial.print((char*)"99s0");           // Always the first play
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
-            dataPackage = 4;
             break;
 
           default:
@@ -270,14 +264,12 @@ void loop() {
         read_serial_string(enemy_move);
         move = checkCode(enemy_move);
         updateBoard(move, board, 2);
-        /*available_pieces[1][move.piece] = 0;*/
 
         move = basicAI(board, available_pieces);
         moveToString(move, my_move);
         Serial.print(my_move);
         updateBoard(move, board, 1);
         available_pieces[0][move.piece] = 0;
-        /*print_board(board);*/
         break;
 
       default:
@@ -391,12 +383,6 @@ void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
     
   xOffset = move.x - 3;             // Compensate for borders
   yOffset = move.y - 3;
-
-  /*Serial.println("");
-  Serial.print(move.x);
-  Serial.print(" ");
-  Serial.println(move.y);*/
-
   
   switch (move.rotation) {          // Ask Abreu about this madness
     case 0:
@@ -412,8 +398,8 @@ void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
       break;
 
     case 2:
-      for (x = 0, xr = 0; xr < 5; x++, y++)
-        for (yr = 4, x = 0; xr >= 0; yr--, x++)
+      for (y = 0, xr = 0; xr < 5; xr++, y++)
+        for (yr = 4, x = 0; yr >= 0; yr--, x++)
           changeBoard(move.piece, yr, xr, player, y, x, xOffset, yOffset, board);
       break;
 
@@ -468,15 +454,6 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
   if (available_pieces[0][move.piece] == 0)
     return 0;
 
-  /*Serial.println("");
-  Serial.print(move.x);
-  Serial.print(" ");
-  Serial.print(move.y);
-  Serial.print(" ");
-  Serial.print(move.piece);
-  Serial.print(" ");
-  Serial.println(move.rotation);*/
-
   switch (move.rotation) {
     case 0:
       for (yr = 0, y = 0; yr < 5; yr++, y++) {
@@ -487,10 +464,6 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
               return 0;
             else if (check == 1)
               valid = 1;
-
-            /*Serial.print(check);
-            Serial.print(" ");
-            Serial.println(valid);*/
           }
         }
       }
@@ -606,10 +579,6 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
 
   xx = xOffset + x;
   yy = yOffset + y;
-
-  /*Serial.print(yy);
-  Serial.print(" ");
-  Serial.println(xx);*/
   
   if (board[yy][xx] != 0 || yy < 0 || 13 < yy || xx < 0 || 13 < xx)                     // Already occupied grid spot or out of bounds
     return 0;
@@ -646,7 +615,7 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
   return move;
 }
 
-void print_board(uint8_t board [14][14]) {
+/*void print_board(uint8_t board [14][14]) {
   int x;
   int y;
 
@@ -662,7 +631,7 @@ void print_board(uint8_t board [14][14]) {
     }
     Serial.println(" ");
   }
- }
+ }*/
 /*
   void print_pieces(int available_pieces [2][21]) {
   int x;
