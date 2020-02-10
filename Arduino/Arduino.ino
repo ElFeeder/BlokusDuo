@@ -237,7 +237,6 @@ void loop() {
             read_serial_string(enemy_move);
             move = checkCode(enemy_move);
             updateBoard(move, board, 2);
-            available_pieces[1][move.piece] = 0;
 
             Serial.print((char*)"66s0");           // Always the first play
             move = checkCode((char*)"66s0");
@@ -248,7 +247,6 @@ void loop() {
             read_serial_string(enemy_move);
             move = checkCode(enemy_move);
             updateBoard(move, board, 2);
-            available_pieces[1][move.piece] = 0;
 
             Serial.print((char*)"99s0");           // Always the first play
             move = checkCode((char*)"99s0");
@@ -290,6 +288,15 @@ void read_serial_string(char input_string[5]) {
 
 void moveToString(MOVE move, char myMove[5])  {
 
+  if(move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0) {
+    myMove[0] = '0';
+    myMove[1] = '0';
+    myMove[2] = '0';
+    myMove[3] = '0';
+
+    return;
+  }
+  
   if (move.x < 10)
     myMove[0] = move.x + '0';
   else
@@ -453,7 +460,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
 
   if (available_pieces[0][move.piece] == 0)
     return 0;
-
+  
   switch (move.rotation) {
     case 0:
       for (yr = 0, y = 0; yr < 5; yr++, y++) {
@@ -580,7 +587,7 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   xx = xOffset + x;
   yy = yOffset + y;
   
-  if (board[yy][xx] != 0 || yy < 0 || 13 < yy || xx < 0 || 13 < xx)                     // Already occupied grid spot or out of bounds
+  if (board[yy][xx] != 0 || yy - 1 < 0 || 13 < yy + 1 || xx - 1 < 0 || 13 < xx + 1)                     // Already occupied grid spot or out of bounds
     return 0;
   if (board[yy][xx - 1] == 1 || board[yy][xx + 1] == 1 || board[yy - 1][xx] == 1 || board[yy + 1][xx] == 1 )              // New piece can't share edge
     return 0;
@@ -631,7 +638,7 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
     }
     Serial.println(" ");
   }
- }*/
+}*/
 /*
   void print_pieces(int available_pieces [2][21]) {
   int x;
