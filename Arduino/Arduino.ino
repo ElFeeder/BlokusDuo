@@ -587,15 +587,18 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   xx = xOffset + x;
   yy = yOffset + y;
 
-  if (yy < 0 || 13 > yy || xx < 0 || 13 > xx)                       // Out of bounds
+  if (yy < 0 || 13 > yy || xx < 0 || 13 > xx)             // Out of bounds
     return 0;
+  /*if (yy - 1 < 0 || xx - 1 < 0 || xx + 1 > 13 || yy + 1 > 13)
+    flag = 1;*/
+
   if (board[yy][xx] != 0)                     // Already occupied grid spot
     return 0;
-  if ((board[yy][xx - 1] == 1 && xx - 1 >= 0) || (board[yy][xx + 1] == 1 && xx + 1 >= 0) ||
-      (board[yy - 1][xx] == 1 && y - 1 >= 0) || (board[yy + 1][xx] == 1 && yy - 1 >= 0))              // New piece can't share edge
+  if ((board[yy][xx - 1] == 1 && xx - 1 >= 0) || (board[yy][xx + 1] == 1 && xx + 1 <= 13) ||
+      (board[yy - 1][xx] == 1 && yy - 1 >= 0) || (board[yy + 1][xx] == 1 && yy + 1 <= 13))              // New piece can't share edge
     return 0;
-  if ((board[yy - 1][xx - 1] == 1 && yy - 1 >= 0 && xx - 1 >= 0) || (board[yy + 1][xx - 1] == 1 && yy + 1 >= 0 && xx - 1 >= 0)
-      || (board[yy - 1][xx + 1] == 1 && yy - 1 >= 0 && xx + 1 >= 0) || (board[yy + 1][xx + 1] == 1 && yy + 1 >= 0 && xx + 1 >= 0))  // Must share vertex
+  if ((board[yy - 1][xx - 1] == 1 && yy - 1 >= 0 && xx - 1 >= 0) || (board[yy + 1][xx - 1] == 1 && yy + 1 <= 13 && xx - 1 >= 0) ||
+      (board[yy - 1][xx + 1] == 1 && yy - 1 >= 0 && xx + 1 <= 13) || (board[yy + 1][xx + 1] == 1 && yy + 1 <= 13 && xx + 1 <= 13))    // Must share vertex
     return 1;
 
   return 2;           // Can't conclude anything
