@@ -199,6 +199,7 @@ void setup() {
   available_pieces[0][18] = 0;            // We're always going to start with this play, might as well already remove it
 }
 
+
 void loop() {
   if (Serial.available() > 0)       // check if there is information in the port
   {
@@ -276,6 +277,7 @@ void loop() {
   }
 }
 
+
 // COMS FUNCTIONS ------------------------------------------------------------------------------------------------------------------------------
 
 void read_serial_string(char input_string[5]) {
@@ -326,23 +328,6 @@ void startup_board(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
       available_pieces[y][x] = 1;
 }
 
-// GAME FUNCTIONS ------------------------------------------------------------------------------------------------------------------------------
-
-/*void copy_board(uint8_t board1 [14][14], uint8_t board2 [14][14]) {
-  int x, y;
-  for (y = 0; y < 14; y++)
-    for (x = 0; x < 14; x++)
-      board1 [y][x] = board2 [y][x];
-
-  }
-
-  void copy_available_pieces(int available_pieces1[2][21], int available_pieces2[2][21]) {
-  int x, y;
-  for (y = 0; y < 14; y++)
-    for (x = 0; x < 14; x++)
-      available_pieces1[y][x] = available_pieces2[y][x];
-
-  }*/
 
 MOVE checkCode(char external_move[5]) {
   MOVE move;
@@ -377,6 +362,7 @@ MOVE checkCode(char external_move[5]) {
 
   return move;
 }
+
 
 void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
   uint8_t x, y;
@@ -581,6 +567,7 @@ uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE m
   return (valid == 1 ? 1 : 0);
 }
 
+
 uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint8_t board[14][14]) {
   int8_t xx, yy;
 
@@ -626,197 +613,3 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
 
   return move;
 }
-
-/*void print_board(uint8_t board [14][14]) {
-  int x;
-  int y;
-
-  Serial.println(" ");
-  for (y = 0; y < 14; y++) {
-    for (x = 0; x < 14; x++) {
-      if (board[y][x] == 0)
-        Serial.print(" 0 ");
-      if (board[y][x] == 1)
-        Serial.print(" 1 ");
-      if (board[y][x] == 2)
-        Serial.print(" 2 ");
-    }
-    Serial.println(" ");
-  }
-  }*/
-/*
-  void print_pieces(int available_pieces [2][21]) {
-  int x;
-  int y;
-
-  Serial.println(" ");
-  for (y = 0; y < 2; y++) {
-    for (x = 0; x < 21; x++) {
-      if (available_pieces[y][x] == 0)
-        Serial.print(" 0 ");
-      if (available_pieces[y][x] == 1)
-        Serial.print(" 1 ");
-    }
-    Serial.println(" ");
-  }
-  }*/
-
-// DEV ZONE ---------------------------------------------------------------------------------------
-
-/*void basic_test_ai2(uint8_t external_board [14][14], char final_play[4]) {
-
-  int x;
-  int y;
-  int p;
-  int r;
-  int max_val = -100;
-  int eval;
-  char play[4];
-
-  final_play [0] = '0';
-  final_play [1] = '0';
-  final_play [2] = '0';
-  final_play [3] = '0';
-
-  for (y = 14; y >= 0 ; y--)
-    for (x = 14; x >= 0 ; x--)
-      for (p = 21; p >= 0; p--)
-        for (r = 0; r < 7; r++) {
-
-          if (x < 10 )
-            play [0] = x + '0';
-          else
-            play [0] = x + 'a' - 10;
-
-          if (y < 10 )
-            play [1] = y + '0';
-          else
-            play [1] = y + 'a' - 10;
-
-          play [2] = p + 'a';
-          play [3] = r + '0';
-
-          if (check_move (external_board, available_pieces, play, 1))
-          {
-            eval = evaluate_play (external_board, play);
-            if (max_val < eval) {
-              final_play [0] = play [0];
-              final_play [1] = play [1];
-              final_play [2] = play [2];
-              final_play [3] = play [3];
-              max_val = eval;
-            }
-          }
-
-        }
-  }
-
-  int minimax_ai(uint8_t external_board [14][14], int external_available_pieces[2][21], char final_play[4], int depth, int player) {
-
-  int min_val;
-  int max_val;
-  int eval;
-  int x;
-  int y;
-  int p;
-  int r;
-  char play[4];
-  char best_play[4];
-  uint8_t internal_board [14][14];
-  int internal_available_pieces[2][21];
-
-  copy_board(internal_board, external_board);
-  copy_available_pieces(internal_available_pieces, external_available_pieces);
-
-  if (depth == 0)
-  {
-    return 10;
-  }
-
-  else if (player == 1) {
-    max_val = -100000;
-    for (y = 0; y < 14; y++) {
-      for (x = 0; x < 14; x++)
-        for (p = 0; p < 21; p++)
-          for (r = 0; r < 7; r++) {
-            if (x < 10 )
-              play [0] = x + '0';
-            else
-              play [0] = x + 'a' - 10;
-
-            if (y < 10 )
-              play [1] = y + '0';
-            else
-              play [1] = y + 'a' - 10;
-
-            play [2] = p + 'a';
-            play [3] = r + '0';
-            if (check_move (internal_board, internal_available_pieces, play, 1))
-            {
-              checkCode(internal_board, play, 1);
-              internal_available_pieces[0][p] = 0;
-              eval = minimax_ai(internal_board, internal_available_pieces, play, depth - 1, 2);
-              if (eval > max_val)
-              {
-                eval = max_val;
-                best_play [0] = play[0];
-                best_play [1] = play[1];
-                best_play [2] = play[2];
-                best_play [3] = play[3];
-              }
-            }
-          }
-    }
-    final_play [0] = best_play[0];
-    final_play [1] = best_play[1];
-    final_play [2] = best_play[2];
-    final_play [3] = best_play[3];
-    return max_val;
-  }
-  else if (player == 2) {
-    min_val = 100000;
-    for (y = 0; y < 14; y++) {
-      for (x = 0; x < 14; x++)
-        for (p = 0; p < 21; p++)
-          for (r = 0; r < 7; r++) {
-
-            if (x < 10 )
-              play [0] = x + '0';
-            else
-              play [0] = x + 'a' - 10;
-
-            if (y < 10 )
-              play [1] = y + '0';
-            else
-              play [1] = y + 'a' - 10;
-
-            play [2] = p + 'a';
-            play [3] = r + '0';
-            if (check_move (internal_board, internal_available_pieces, play, 2))
-            {
-              checkCode(internal_board, play, 2);
-              internal_available_pieces[1][p] = 0;
-              eval = minimax_ai(internal_board, internal_available_pieces, play, depth - 1, 1);
-              if (eval < min_val)
-                eval = min_val;
-            }
-          }
-    }
-    return min_val;
-  }
-  }
-
-  int evaluate_play (uint8_t external_board [14][14], char play[4]) {
-  int x, y;
-  int points_p1 = 0, points_p2 = 0;
-
-  for (y = 0; y < 14; y++) {
-    for (x = 0; x < 14; x++) {
-      if (external_board[y][x] == 1)
-        points_p1++;
-      if (external_board[y][x] == 2)
-        points_p2++;
-    }
-  }
-  return points_p1 - points_p2;
-  }*/
