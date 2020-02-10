@@ -1,6 +1,7 @@
 uint8_t read_byte, readSecondByte;
 uint8_t board[14][14];
 uint8_t available_pieces[2][21];
+uint8_t dataPackage = 0;
 
 char enemy_move[5];
 char my_move[5];
@@ -200,7 +201,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0)       // check if there is information in the port
+  if (Serial.available() > dataPackage)       // check if there is information in the port
   {
     delay(1);                       // for reasons only known to god, without this delay, the code doesnt work, please dont remove
     read_byte = Serial.read();      // read first byte from recieved string
@@ -218,12 +219,14 @@ void loop() {
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
             /*print_board(board);*/
+            dataPackage = 4;
             break;
 
           case 'A':
             Serial.print((char*)"99s0");
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
+            dataPackage = 4;
             break;
 
           default:
@@ -243,6 +246,7 @@ void loop() {
             Serial.print((char*)"66s0");           // Always the first play
             move = checkCode((char*)"66s0");
             updateBoard(move, board, 1);
+            dataPackage = 4;
             break;
 
           case 'A':
@@ -254,6 +258,7 @@ void loop() {
             Serial.print((char*)"99s0");           // Always the first play
             move = checkCode((char*)"99s0");
             updateBoard(move, board, 1);
+            dataPackage = 4;
             break;
 
           default:
