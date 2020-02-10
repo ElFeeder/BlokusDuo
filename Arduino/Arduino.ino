@@ -170,25 +170,21 @@ uint8_t pieces[21][5][5] = {
 
 // COMS FUNCTIONS -----------------------------------------------------------------
 void read_serial_string(char input_string[]);
-
 void moveToString(MOVE move, char myMove[5]);
 
+MOVE checkCode(char external_move[4]);
 
 // STARTUP FUNCTIONS --------------------------------------------------------------
 void startup_board(uint8_t board[14][14], uint8_t available_pieces[2][21]);
 
 
 // GAME FUNCTIONS -----------------------------------------------------------------
-MOVE checkCode(char external_move[4]);
-
 void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player);
 void changeBoard(uint8_t piece, int8_t yr, int8_t xr, uint8_t player, uint8_t y, uint8_t x, int8_t xOffset, int8_t yOffset, uint8_t board[14][14]);
 
 uint8_t checkMove(uint8_t board[14][14], uint8_t available_pieces[2][21], MOVE move);
 uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint8_t board[14][14]);
 
-
-// TEST FUNCTIONS -----------------------------------------------------------------
 MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21], uint8_t dir);
 
 
@@ -296,6 +292,41 @@ void read_serial_string(char input_string[5]) {
 }
 
 
+MOVE checkCode(char external_move[5]) {
+  MOVE move;
+  char c;
+
+  if (strcmp("0000", external_move) == 0) {   // If it's a pass
+    move.x = 0;
+    move.y = 0;
+    move.piece = 0;
+    move.rotation = 0;
+
+    return move;
+  }
+
+  c = external_move[0];
+  if ('0' <= c && c <= '9')
+    move.x = c - '0';
+  if ('a' <= c && c <= 'e')
+    move.x = c - 'a' + 10;
+
+  c = external_move[1];
+  if ('0' <= c && c <= '9')
+    move.y = c - '0';
+  if ('a' <= c && c <= 'e')
+    move.y = c - 'a' + 10;
+
+  c = external_move[2];
+  move.piece = c - 'a';
+
+  c = external_move[3];
+  move.rotation = c - '0';
+
+  return move;
+}
+
+
 void moveToString(MOVE move, char myMove[5])  {
 
   if (move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0) {
@@ -337,40 +368,7 @@ void startup_board(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
 }
 
 
-MOVE checkCode(char external_move[5]) {
-  MOVE move;
-  char c;
-
-  if (strcmp("0000", external_move) == 0) {   // If it's a pass
-    move.x = 0;
-    move.y = 0;
-    move.piece = 0;
-    move.rotation = 0;
-
-    return move;
-  }
-
-  c = external_move[0];
-  if ('0' <= c && c <= '9')
-    move.x = c - '0';
-  if ('a' <= c && c <= 'e')
-    move.x = c - 'a' + 10;
-
-  c = external_move[1];
-  if ('0' <= c && c <= '9')
-    move.y = c - '0';
-  if ('a' <= c && c <= 'e')
-    move.y = c - 'a' + 10;
-
-  c = external_move[2];
-  move.piece = c - 'a';
-
-  c = external_move[3];
-  move.rotation = c - '0';
-
-  return move;
-}
-
+// GAME FUNCTIONS -----------------------------------------------------------------
 
 void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
   uint8_t x, y;
@@ -597,8 +595,6 @@ uint8_t iterCheckMove(int8_t xOffset, uint8_t x, int8_t yOffset, uint8_t y, uint
   return 2;           // Can't conclude anything
 }
 
-
-// TEST FUNCTIONS ------------------------------------------------------------------------------------------------------------------------------
 
 MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21], uint8_t dir) {
   MOVE move;
