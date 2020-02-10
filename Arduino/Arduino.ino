@@ -290,8 +290,6 @@ void read_serial_string(char input_string[5]) {
 
 
 void moveToString(MOVE move, char myMove[5])  {
-  /*move.x++;         // Compensate for border
-  move.y++;*/
 
   if (move.x < 10)
     myMove[0] = move.x + '0';
@@ -371,6 +369,9 @@ MOVE checkCode(char external_move[5]) {
   c = external_move[3];
   move.rotation = c - '0';
 
+  move.x--;
+  move.y--;
+  
   return move;
 }
 
@@ -384,8 +385,8 @@ void updateBoard(MOVE move, uint8_t board[14][14], uint8_t player)  {
   if (move.x == 0 && move.y == 0 && move.piece == 0 && move.rotation == 0)
     return;
     
-  xOffset = move.x - 2;             // Compensate for borders
-  yOffset = move.y - 2;
+  xOffset = move.x - 3;             // Compensate for borders
+  yOffset = move.y - 3;
 
   /*Serial.println("");
   Serial.print(move.x);
@@ -626,8 +627,11 @@ MOVE basicAI(uint8_t board[14][14], uint8_t available_pieces[2][21]) {
     for (move.rotation = 0; move.rotation < 8; move.rotation++)
       for (move.x = 13; move.x >= 0; move.x--)
         for (move.y = 13; move.y >= 0; move.y--)
-          if (checkMove(board, available_pieces, move) == 1)  // Check if it's a valid move
+          if (checkMove(board, available_pieces, move) == 1)  {  // Check if it's a valid move
+            move.x++;
+            move.y++;
             return move;
+          }
 
 
   move.x = 0;             // Fill struct move with 0000 (automatic pass turn)
